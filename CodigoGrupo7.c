@@ -59,14 +59,6 @@ int myAnalogRead(int spiChannel, int channelConfig, int analogChannel) {
 	
 }
 
-
-float calcularVoltaje(int spiChanel){
-	
-	
-	return (((float)spiChanel/1024)*3.3);
-}
-
-
 int main(int argc, char *argv[]) {
 	
     int loadSpi = FALSE;
