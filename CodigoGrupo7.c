@@ -1,3 +1,11 @@
+/*
+ *  readMcp3008.c:
+ *  read value from ADC MCP3008
+ *
+ * Requires: wiringPi (http://wiringpi.com)
+ * Copyright (c) 2015 http://shaunsbennett.com/piblog
+ ***********************************************************************
+ */
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -8,6 +16,12 @@
 #include <errno.h>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
+
+#define RANGO       100
+#define PIN17       0 //El 17 en el GPIO
+#define PIN22       3 //El 22 en el GPIO
+
+
 
 #define	TRUE	            (1==1)
 #define	FALSE	            (!TRUE)
@@ -59,6 +73,32 @@ int myAnalogRead(int spiChannel, int channelConfig, int analogChannel) {
 	
 }
 
+
+void avanzar(double t){
+    //15 el medio, 16 para arriba avanzar
+    softPwmCreate (PIN17, 0, RANGO);//ziquierda
+    softPwmWrite(PIN17, 20 );
+
+    //15 para abajo avanza
+    softPwmCreate (PIN22, 0, RANGO);//Derecho
+    softPwmWrite(PIN22, 10 );
+
+    delay(t * 1000);
+
+}
+
+void girarDerecha(){
+
+    //15 el medio, 16 para arriba avanzar
+    softPwmCreate (PIN17, 0, RANGO);//Izquierdo
+    softPwmWrite(PIN17, 20 );
+
+    //14 para abajo avanza
+    softPwmCreate (PIN22, 0, RANGO);//Derecho
+    softPwmWrite(PIN22, 15 );
+    delay(1723);
+}
+
 int main(int argc, char *argv[]) {
 	
     int loadSpi = FALSE;
@@ -100,12 +140,41 @@ int main(int argc, char *argv[]) {
 			
     }
 	
+    //
     if(loadSpi == TRUE)
         loadSpiDriver();
 	
     wiringPiSetup();
     spiSetup(spiChannel);
-    //--------------------Desde aqui nuestra funcionalidad---------------
+    //
+	channelConfig == CHAN_CONFIG_SINGLE;
+    while(1){
+       
+		
+            if(myAnalogRead(spiChannel, channelConfig, 0) >= 400){
+                girarDerecha();
+            }
+
+            if(myAnalogRead(spiChannel, channelConfig, 1) >= 400 ){
+                girarDerecha();
+            }
+
+            
+            if(myAnalogRead(spiChannel, channelConfig, 2) <= 600 ){
+               girarDerecha();
+            }
+
+            
+            if(myAnalogRead(spiChannel, channelConfig, 3) <= 400 ){
+               girarDerecha();
+            }
+        
+        
+
+        }
+			
+		
+	}
 	
     close(myFd);
 	
