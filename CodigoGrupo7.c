@@ -6,6 +6,7 @@
  * Copyright (c) 2015 http://shaunsbennett.com/piblog
  ***********************************************************************
  */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -18,8 +19,9 @@
 #include <wiringPiSPI.h>
 
 #define RANGO       100
-#define PIN17       0 //El 17 en el GPIO
-#define PIN22       3 //El 22 en el GPIO
+#define Izq       0 //El 17 en el GPIO
+#define MotorPaso 4//EL 23 en el GPIO
+#define Der       3 //El 22 en el GPIO
 
 
 
@@ -72,31 +74,32 @@ int myAnalogRead(int spiChannel, int channelConfig, int analogChannel) {
     return ((buffer[1] & 3) << 8) + buffer[2]; // get last 10 bits
 	
 }
-
-
-void avanzar(double t){
+void Parar(){
     //15 el medio, 16 para arriba avanzar
-    softPwmCreate (PIN17, 0, RANGO);//ziquierda
-    softPwmWrite(PIN17, 20 );
+    softPwmWrite(Izq, 15 );
 
     //15 para abajo avanza
-    softPwmCreate (PIN22, 0, RANGO);//Derecho
-    softPwmWrite(PIN22, 10 );
+    softPwmWrite(Der, 15 );
+}
 
-    delay(t * 1000);
+void avanzar(){
+    //15 el medio, 16 para arriba avanzar
+    softPwmWrite(Izq, 20 );
 
+    //15 para abajo avanza
+    softPwmWrite(Der, 10 );
 }
 
 void girarDerecha(){
-
-    //15 el medio, 16 para arriba avanzar
-    softPwmCreate (PIN17, 0, RANGO);//Izquierdo
-    softPwmWrite(PIN17, 20 );
-
+    //Paro rueda izquierda
     //14 para abajo avanza
-    softPwmCreate (PIN22, 0, RANGO);//Derecho
-    softPwmWrite(PIN22, 15 );
-    delay(1723);
+    softPwmWrite(Der, 15 );
+}
+
+void girarIzquierda(){
+    //Paro la rueda izquierda
+    //15 el medio
+    softPwmWrite(Izq, 15 );
 }
 
 int main(int argc, char *argv[]) {
@@ -146,27 +149,36 @@ int main(int argc, char *argv[]) {
 	
     wiringPiSetup();
     spiSetup(spiChannel);
-    //
 	channelConfig == CHAN_CONFIG_SINGLE;
+
+    softPwmCreate (Der, 0, RANGO);//Derecho
+    softPwmCreate (Izq, 0, RANGO);//Izquierdo
     while(1){
        
-		
-            if(myAnalogRead(spiChannel, channelConfig, 0) >= 400){
-                girarDerecha();
+            //Globo derecha
+            if(myAnalogRead(spiChannel, channelConfig, 0) >= 300){
+                Parar();
+                //Torreta
             }
 
-            if(myAnalogRead(spiChannel, channelConfig, 1) >= 400 ){
-                girarDerecha();
+            //globo izquierda
+            if(myAnalogRead(spiChannel, channelConfig, 1) >= 300 ){
+                 Parar();
+                //Torreta y algun calculo de distancia
             }
 
-            
+            //Sensor linea izquierda
             if(myAnalogRead(spiChannel, channelConfig, 2) <= 600 ){
-               girarDerecha();
+               girarIzquierda();
+            }else{
+                avanzar();
             }
 
-            
-            if(myAnalogRead(spiChannel, channelConfig, 3) <= 400 ){
+            //sensor linea derecha
+            if(myAnalogRead(spiChannel, channelConfig, 3) <= 300 ){
                girarDerecha();
+            }else{
+                avanzar();
             }
         
         
