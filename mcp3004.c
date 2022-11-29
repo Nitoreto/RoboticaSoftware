@@ -35,11 +35,11 @@
  *********************************************************************************
  */
 
-static int myAnalogRead (int pin)
+static int myAnalogRead (struct wiringPiNodeStruct *node, int pin)
 {
   unsigned char spiData [3] ;
   unsigned char chanBits ;
-  int chan = pin - 100 ;
+  int chan = pin - node->pinBase ;
 
   chanBits = 0b10000000 | (chan << 4) ;
 
@@ -47,7 +47,7 @@ static int myAnalogRead (int pin)
   spiData [1] = chanBits ;
   spiData [2] = 0 ;
 
-  wiringPiSPIDataRW (0, spiData, 3) ;
+  wiringPiSPIDataRW (node->fd, spiData, 3) ;
 
   return ((spiData [1] << 8) | spiData [2]) & 0x3FF ;
 }

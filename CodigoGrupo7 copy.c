@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
-#include <mcp3004.h>
+#include "mcp3004.h"
 #include <softPwm.h>
 
 #define RANGO       100
@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
     while(1){
-        int ch1 = myAnalogRead(100);
-        int ch2 = myAnalogRead(101);
-        int ch3 = myAnalogRead(102);
-        int ch4 = myAnalogRead(103);
+        int ch1 = analogRead(100);
+        int ch2 = analogRead(101);
+        int ch3 = analogRead(102);
+        int ch4 = analogRead(103);
 
         if (parado == 1){
             if(ch1 < 300 && ch2 < 300 ){
