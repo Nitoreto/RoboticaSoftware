@@ -91,7 +91,7 @@ void avanzar(){
 }
 
 void girarDerecha(){
-    //Paro rueda izquierda
+    //Paro rueda derecha
     //14 para abajo avanza
     softPwmWrite(Der, 15 );
 }
@@ -104,71 +104,29 @@ void girarIzquierda(){
 
 int main(int argc, char *argv[]) {
 	
-    int loadSpi = FALSE;
-    int analogChannel = 0;
-    int spiChannel = 0;
-    int channelConfig = CHAN_CONFIG_SINGLE;
-	
-    if (argc < 2) {
-		
-        fprintf(stderr, "%s\n", usage);
-		
-        return 1;
-		
-    }
-	
-    if((strcasecmp(argv[1], "all") == 0))
-		argv[1] = "0";
-		
-    if ((sscanf(argv[1], "%i", &analogChannel) != 1) || analogChannel < 0 || analogChannel > 8) {
-		
-        printf ("%s\n", usage);
-		
-        return 1;
-		
-    }
-	
-    int i;
-	
-    for(i = 2; i < argc; i++) {
-		
-        if (strcasecmp(argv[i], "-l") == 0 || strcasecmp(argv[i], "-load") == 0)
-            loadSpi = TRUE;
-			
-        else if (strcasecmp(argv[i], "-ce1") == 0)
-            spiChannel = 1;
-			
-        else if (strcasecmp(argv[i], "-d") == 0 || strcasecmp(argv[i], "-diff") == 0)
-            channelConfig = CHAN_CONFIG_DIFF;
-			
-    }
-	
-    if(loadSpi == TRUE)
-        loadSpiDriver();
-	
     wiringPiSetup();
-    spiSetup(spiChannel);
+    mcp3004Setup(100, 0);
 
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
     while(1){
        
         //Globo derecha
-        if(myAnalogRead(spiChannel, channelConfig, 0) >= 300){
+        if(myAnalogRead(100) >= 300){
             Parar();
             printf ("Sensor obstaculo derecho activado, parando");
             //Torreta
         }
 
         //globo izquierda
-        if(myAnalogRead(spiChannel, channelConfig, 1) >= 300 ){
+        if(myAnalogRead(101) >= 300 ){
             Parar();
             printf ("Sensor obstaculo izquierdo activado, parando");
             //Torreta y algun calculo de distancia
         }
 
         //Sensor linea izquierda
-        if(myAnalogRead(spiChannel, channelConfig, 2) <= 600 ){
+        if(myAnalogRead(102) <= 600 ){
             girarIzquierda();
             printf ("Sensor linea izquierdo activado, girando izquierda");
         }else{
@@ -176,7 +134,7 @@ int main(int argc, char *argv[]) {
         }
 
         //sensor linea derecha
-        if(myAnalogRead(spiChannel, channelConfig, 3) <= 300 ){
+        if(myAnalogRead(103) <= 300 ){
             printf ("Sensor linea derecha activado, girando derecha");
             girarDerecha();
         }else{
@@ -185,9 +143,6 @@ int main(int argc, char *argv[]) {
 			
 		
 	}
-	
-    close(myFd);
-	
     return 0;
 	
 }
