@@ -23,7 +23,7 @@
 #define MotorPaso 4//EL 23 en el GPIO
 #define Der       3 //El 22 en el GPIO
 
-bool parado = true;
+
 
 void Parar(){
     //15 el medio, 16 para arriba avanzar
@@ -31,7 +31,6 @@ void Parar(){
 
     //15 para abajo avanza
     softPwmWrite(Der, 15 );
-    parado = true;
     }
 
 void avanzar(){
@@ -57,6 +56,8 @@ void girarIzquierda(){
 }
 
 int main(int argc, char *argv[]) {
+
+    int parado = 0;
 	
     wiringPiSetup();
     mcp3004Setup(100, 0);
@@ -69,10 +70,10 @@ int main(int argc, char *argv[]) {
         int ch3 = myAnalogRead(102);
         int ch4 = myAnalogRead(103);
 
-        if (parado){
-            if(myAnalogRead(100) < 300 && myAnalogRead(101) < 300 ){
+        if (parado == 1){
+            if(ch1 < 300 && ch2 < 300 ){
             avanzar();
-            parado = false;
+            parado = 0;
             }
             else {
                 if (ch1 >= 300 && ch2 < 300){
@@ -105,22 +106,22 @@ int main(int argc, char *argv[]) {
 
             if (ch3 < 600 && ch4 < 300){
                 Parar();
-                parado = true;
+                parado = 1;
             }
             
             //Globo derecha
-            if(myAnalogRead(100) >= 300){
+            if(ch1 >= 300){
                 Parar();
-                parado = true;
+                parado = 1;
                 printf ("Sensor obstaculo derecho activado, parando");
                 //Torreta
             }
 
 
             //globo izquierda
-            if(myAnalogRead(101) >= 300 ){
+            if(ch2 >= 300 ){
                 Parar();
-                parado = true;
+                parado = 1;
                 printf ("Sensor obstaculo izquierdo activado, parando");
                 //Torreta y algun calculo de distancia
             }
