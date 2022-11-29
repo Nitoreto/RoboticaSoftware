@@ -80,7 +80,7 @@ void Parar(){
 
     //15 para abajo avanza
     softPwmWrite(Der, 15 );
-}
+    }
 
 void avanzar(){
     //15 el medio, 16 para arriba avanzar
@@ -91,15 +91,17 @@ void avanzar(){
 }
 
 void girarDerecha(){
-    //Paro rueda izquierda
+    //Paro rueda derecha
     //14 para abajo avanza
     softPwmWrite(Der, 15 );
+    delay(100);
 }
 
 void girarIzquierda(){
     //Paro la rueda izquierda
     //15 el medio
     softPwmWrite(Izq, 15 );
+    delay(100);
 }
 
 int main(int argc, char *argv[]) {
@@ -151,40 +153,72 @@ int main(int argc, char *argv[]) {
 
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
-    while(1){
-       
-        //Globo derecha
-        if(myAnalogRead(spiChannel, channelConfig, 0) >= 300){
-            Parar();
-            printf ("Sensor obstaculo derecho activado, parando");
-            //Torreta
-        }
+     while(1){
+        int ch1 = myAnalogRead(spiChannel, channelConfig,0);
+        int ch2 = myAnalogRead(spiChannel, channelConfig,1);
+        int ch3 = myAnalogRead(spiChannel, channelConfig,2);
+        int ch4 = myAnalogRead(spiChannel, channelConfig,3);
 
-        //globo izquierda
-        if(myAnalogRead(spiChannel, channelConfig, 1) >= 300 ){
-            Parar();
-            printf ("Sensor obstaculo izquierdo activado, parando");
-            //Torreta y algun calculo de distancia
-        }
-
-        //Sensor linea izquierda
-        if(myAnalogRead(spiChannel, channelConfig, 2) <= 600 ){
-            girarIzquierda();
-            printf ("Sensor linea izquierdo activado, girando izquierda");
-        }else{
+        if (parado == 1){
+            if(ch1 < 300 && ch2 < 300 ){
             avanzar();
+            parado = 0;
+            }
+            else {
+                if (ch1 >= 300 && ch2 < 300){
+                    //petar derecha
+                }
+                if (ch2 >= 300 && ch1 < 300){
+                    //petar izquierda
+                }
+            }
+            
         }
 
-        //sensor linea derecha
-        if(myAnalogRead(spiChannel, channelConfig, 3) <= 300 ){
-            printf ("Sensor linea derecha activado, girando derecha");
-            girarDerecha();
-        }else{
-            avanzar();
+        else{
+
+            //Sensor linea izquierda
+            if(ch3 <= 600 ){
+                girarIzquierda();
+                printf ("Sensor linea izquierdo activado, girando izquierda");
+            }else{
+                avanzar();
+            }
+
+            //sensor linea derecha
+            if(ch4 <= 300 ){
+                printf ("Sensor linea derecha activado, girando derecha");
+                girarDerecha();
+            }else{
+                avanzar();
+            }
+
+            if (ch3 < 600 && ch4 < 300){
+                Parar();
+                parado = 1;
+            }
+            
+            //Globo derecha
+            if(ch1 >= 300){
+                Parar();
+                parado = 1;
+                printf ("Sensor obstaculo derecho activado, parando");
+                //Torreta
+            }
+
+
+            //globo izquierda
+            if(ch2 >= 300 ){
+                Parar();
+                parado = 1;
+                printf ("Sensor obstaculo izquierdo activado, parando");
+                //Torreta y algun calculo de distancia
+            }
+        
+
+            
         }
-			
-		
-	}
+    }
 	
     close(myFd);
 	
