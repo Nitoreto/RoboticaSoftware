@@ -23,6 +23,7 @@
 #define MotorPaso 4//EL 23 en el GPIO
 #define Der       3 //El 22 en el GPIO
 
+bool parado = true;
 
 void Parar(){
     //15 el medio, 16 para arriba avanzar
@@ -30,7 +31,8 @@ void Parar(){
 
     //15 para abajo avanza
     softPwmWrite(Der, 15 );
-}
+    parado = true;
+    }
 
 void avanzar(){
     //15 el medio, 16 para arriba avanzar
@@ -44,12 +46,14 @@ void girarDerecha(){
     //Paro rueda derecha
     //14 para abajo avanza
     softPwmWrite(Der, 15 );
+    delay(100);
 }
 
 void girarIzquierda(){
     //Paro la rueda izquierda
     //15 el medio
     softPwmWrite(Izq, 15 );
+    delay(100);
 }
 
 int main(int argc, char *argv[]) {
@@ -60,39 +64,71 @@ int main(int argc, char *argv[]) {
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
     while(1){
-       
-        //Globo derecha
-        if(myAnalogRead(100) >= 300){
-            Parar();
-            printf ("Sensor obstaculo derecho activado, parando");
-            //Torreta
-        }
+        int ch1 = myAnalogRead(100);
+        int ch2 = myAnalogRead(101);
+        int ch3 = myAnalogRead(102);
+        int ch4 = myAnalogRead(103);
 
-        //globo izquierda
-        if(myAnalogRead(101) >= 300 ){
-            Parar();
-            printf ("Sensor obstaculo izquierdo activado, parando");
-            //Torreta y algun calculo de distancia
-        }
-
-        //Sensor linea izquierda
-        if(myAnalogRead(102) <= 600 ){
-            girarIzquierda();
-            printf ("Sensor linea izquierdo activado, girando izquierda");
-        }else{
+        if (parado){
+            if(myAnalogRead(100) < 300 && myAnalogRead(101) < 300 ){
             avanzar();
+            parado = false;
+            }
+            else {
+                if (ch1 >= 300 && ch2 < 300){
+                    //petar derecha
+                }
+                if (ch2 >= 300 && ch1 < 300){
+                    //petar izquierda
+                }
+            }
+            
         }
 
-        //sensor linea derecha
-        if(myAnalogRead(103) <= 300 ){
-            printf ("Sensor linea derecha activado, girando derecha");
-            girarDerecha();
-        }else{
-            avanzar();
+        else{
+
+            //Sensor linea izquierda
+            if(ch3 <= 600 ){
+                girarIzquierda();
+                printf ("Sensor linea izquierdo activado, girando izquierda");
+            }else{
+                avanzar();
+            }
+
+            //sensor linea derecha
+            if(ch4 <= 300 ){
+                printf ("Sensor linea derecha activado, girando derecha");
+                girarDerecha();
+            }else{
+                avanzar();
+            }
+
+            if (ch3 < 600 && ch4 < 300){
+                Parar();
+                parado = true;
+            }
+            
+            //Globo derecha
+            if(myAnalogRead(100) >= 300){
+                Parar();
+                parado = true;
+                printf ("Sensor obstaculo derecho activado, parando");
+                //Torreta
+            }
+
+
+            //globo izquierda
+            if(myAnalogRead(101) >= 300 ){
+                Parar();
+                parado = true;
+                printf ("Sensor obstaculo izquierdo activado, parando");
+                //Torreta y algun calculo de distancia
+            }
+        
+
+            
         }
-			
-		
-	}
+    }
     return 0;
 	
 }
