@@ -28,6 +28,8 @@ extern "C" {
 
 extern int mcp3004Setup (int pinBase, int spiChannel) ;
 
+extern static int myAnalogRead (struct wiringPiNodeStruct *node, int pin);
+
 #ifdef __cplusplus
 }
 #endif

@@ -17,6 +17,8 @@
 #include <errno.h>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
+#include <mcp3004.h>
+#include <softPwm.h>
 
 #define RANGO       100
 #define Izq       0 //El 17 en el GPIO
