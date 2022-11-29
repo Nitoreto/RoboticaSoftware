@@ -47,14 +47,14 @@ void girarDerecha(){
     //Paro rueda derecha
     //14 para abajo avanza
     softPwmWrite(Der, 15 );
-    delay(100);
+    delay(20);
 }
 
 void girarIzquierda(){
     //Paro la rueda izquierda
     //15 el medio
     softPwmWrite(Izq, 15 );
-    delay(100);
+    delay(20);
 }
 
 int main(int argc, char *argv[]) {
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
                 if (ch1 >= 300 && ch2 < 300){
                     //petar derecha
                 }
-                if (ch2 >= 300 && ch1 < 300){
+                else if (ch2 >= 300 && ch1 < 300){
                     //petar izquierda
                 }
             }
