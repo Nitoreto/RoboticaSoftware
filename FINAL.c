@@ -71,7 +71,7 @@ void girarIzquierda(){
    
 }
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
     int parado = 0;
 	
@@ -91,8 +91,9 @@ int main(int argc, char *argv[]) {
 
         if (parado == 1){
             if(ch1 < dInfra && ch2 < dInfra ){
+                parado = 0;
             avanzar();
-            parado = 0;
+            
             }
             else {
                 while (analogRead(100) >= dInfra && analogRead(101) < dInfra){
@@ -148,7 +149,6 @@ int main(int argc, char *argv[]) {
             if(ch2 >= dInfra ){
                 Parar();
                 parado = 1;
-                //Torreta y algun calculo de distancia
             }
         }
 
