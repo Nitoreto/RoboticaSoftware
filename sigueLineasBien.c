@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
             }
             
             else if(ch4 <= 300 ){
-		//sensor linea derecha
+		      //sensor linea derecha
                 printf ("Sensor linea derecha activado, girando derecha");
                 girarDerecha();
             }else{

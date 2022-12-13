@@ -43,6 +43,14 @@ void avanzar(){
     softPwmWrite(Der, 10 );
 }
 
+void retroceder(){
+    //15 el medio, 16 para arriba avanzar
+    softPwmWrite(Izq, 10 );
+    //15 para abajo avanza
+    softPwmWrite(Der, 20 );
+    delay(10);
+}
+
 void girarDerecha(){
   //Paro la rueda izquierda
     //15 el medio
@@ -123,8 +131,7 @@ int main(int argc, char *argv[]) {
             }
 
             if (ch3 < 600 && ch4 < 300){
-                Parar();
-                parado = 1;
+                retroceder();
             }
             
             //Globo derecha
