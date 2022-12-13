@@ -77,9 +77,9 @@ int main(int argc, char *argv[]) {
 	
     wiringPiSetup();
     mcp3004Setup(100, 0);
-    pinMode (LED, OUTPUT) ;
+    pinMode (MotorPaso, OUTPUT) ;
     pinMode (Sentido, OUTPUT) ;
-    int dInfra = 200;
+    int dInfra = 300;
 
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
