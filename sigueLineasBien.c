@@ -83,24 +83,11 @@ int main(int argc, char *argv[]) {
             parado = 0;
             }
             else {
-                while (analogRead(100) >= 300 && analogRead(101) < 300){
-                    digitalWrite (Sentido, LOW) ;  
-            
-                    digitalWrite (MotorPaso, HIGH) ;	// On
-                    delay (20) ;		// mS
-                    digitalWrite (MotorPaso, LOW) ;	// Off
-                    delay (20) ;		// mS
-
+                if (ch1 >= 300 && ch2 < 300){
+                    //petar derecha
                 }
-                        
-
-                while (analogRead(101) >= 300 && analogRead(100) < 300){
-                    digitalWrite (Sentido, HIGH) ;
-
-                    digitalWrite (MotorPaso, HIGH) ;	// On
-                    delay (20) ;		// mS
-                    digitalWrite (MotorPaso, LOW) ;	// Off
-                    delay (20) ;		// mS
+                if (ch2 >= 300 && ch1 < 300){
+                    //petar izquierda
                 }
             }
             
