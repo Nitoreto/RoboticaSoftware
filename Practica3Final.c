@@ -21,6 +21,7 @@
 #include <softPwm.h>
 
 #define RANGO       100
+#define Sentido   5
 #define Izq       0 //El 17 en el GPIO
 #define MotorPaso 4//EL 23 en el GPIO
 #define Der       3 //El 22 en el GPIO
