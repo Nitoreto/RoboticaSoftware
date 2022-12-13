@@ -1,6 +1,6 @@
 /*
- *  readMcp3008.c:
- *  read value from ADC MCP3008
+ *  readMcpdInfra8.c:
+ *  read value from ADC MCPdInfra8
  *
  * Requires: wiringPi (http://wiringpi.com)
  * Copyright (c) 2015 http://shaunsbennett.com/piblog
@@ -66,7 +66,7 @@ void girarIzquierda(){
     //15 el medio
 	softPwmWrite(Izq, 10 );
     softPwmWrite(Der, 10 );
-	delay(10);
+	delay(5);
 
    
 }
@@ -77,6 +77,9 @@ int main(int argc, char *argv[]) {
 	
     wiringPiSetup();
     mcp3004Setup(100, 0);
+    pinMode (LED, OUTPUT) ;
+    pinMode (Sentido, OUTPUT) ;
+    int dInfra = 200;
 
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
@@ -87,12 +90,12 @@ int main(int argc, char *argv[]) {
         int ch4 = analogRead(103);
 
         if (parado == 1){
-            if(ch1 < 300 && ch2 < 300 ){
+            if(ch1 < dInfra && ch2 < dInfra ){
             avanzar();
             parado = 0;
             }
             else {
-                while (analogRead(100) >= 300 && analogRead(101) < 300){
+                while (analogRead(100) >= dInfra && analogRead(101) < dInfra){
                     digitalWrite (Sentido, LOW) ;  
             
                     digitalWrite (MotorPaso, HIGH) ;	// On
@@ -103,7 +106,7 @@ int main(int argc, char *argv[]) {
                 }
                         
 
-                while (analogRead(101) >= 300 && analogRead(100) < 300){
+                while (analogRead(101) >= dInfra && analogRead(100) < dInfra){
                     digitalWrite (Sentido, HIGH) ;
 
                     digitalWrite (MotorPaso, HIGH) ;	// On
@@ -134,7 +137,7 @@ int main(int argc, char *argv[]) {
             }
             
             //Globo derecha
-            if(ch1 >= 300){
+            if(ch1 >= dInfra){
                 Parar();
                 parado = 1;
                 //Torreta
@@ -142,7 +145,7 @@ int main(int argc, char *argv[]) {
 
 
             //globo izquierda
-            if(ch2 >= 300 ){
+            if(ch2 >= dInfra ){
                 Parar();
                 parado = 1;
                 //Torreta y algun calculo de distancia
