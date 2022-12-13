@@ -59,10 +59,12 @@ void parar(){
                     digitalWrite (MotorPaso, LOW) ;	// Off
                     delay (20) ;		// mS
                 }
-        }
 
         ch1 = analogRead(100);
         ch2 = analogRead(101);
+        
+        }
+
     }
 
 void avanzar(){
@@ -101,8 +103,6 @@ void girarIzquierda(){
 }
 
 int main(void) {
-
-    int parado = 0;
 	
     wiringPiSetup();
     mcp3004Setup(100, 0);
