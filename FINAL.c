@@ -28,12 +28,40 @@
 
 
 
-void Parar(){
+void parar(){
     //15 el medio, 16 para arriba avanzar
     softPwmWrite(Izq, 0 );
-
     //15 para abajo avanza
     softPwmWrite(Der, 0 );
+
+    int ch1 = analogRead(100);
+    int ch2 = analogRead(101);
+
+    while(!(ch1 < dInfra && ch2 < dInfra)){     
+
+        if (ch1 >= dInfra &&  ch2 < dInfra){
+                    digitalWrite (Sentido, LOW) ;  
+            
+                    digitalWrite (MotorPaso, HIGH) ;	// On
+                    delay (20) ;		// mS
+                    digitalWrite (MotorPaso, LOW) ;	// Off
+                    delay (20) ;		// mS
+
+                }
+                        
+
+        if (ch2 >= dInfra && ch1 < dInfra){
+                    digitalWrite (Sentido, HIGH) ;
+
+                    digitalWrite (MotorPaso, HIGH) ;	// On
+                    delay (20) ;		// mS
+                    digitalWrite (MotorPaso, LOW) ;	// Off
+                    delay (20) ;		// mS
+                }
+        }
+        
+        ch1 = analogRead(100);
+        ch2 = analogRead(101);
     }
 
 void avanzar(){
@@ -89,69 +117,32 @@ int main(void) {
         int ch3 = analogRead(102);
         int ch4 = analogRead(103);
 
-        if (parado == 1){
-            if(ch1 < dInfra && ch2 < dInfra ){
-                parado = 0;
-            avanzar();
-            
-            }
-            else {
-                while (analogRead(100) >= dInfra && analogRead(101) < dInfra){
-                    digitalWrite (Sentido, LOW) ;  
-            
-                    digitalWrite (MotorPaso, HIGH) ;	// On
-                    delay (20) ;		// mS
-                    digitalWrite (MotorPaso, LOW) ;	// Off
-                    delay (20) ;		// mS
-
-                }
-                        
-
-                while (analogRead(101) >= dInfra && analogRead(100) < dInfra){
-                    digitalWrite (Sentido, HIGH) ;
-
-                    digitalWrite (MotorPaso, HIGH) ;	// On
-                    delay (20) ;		// mS
-                    digitalWrite (MotorPaso, LOW) ;	// Off
-                    delay (20) ;		// mS
-                }
-            }
-            
-        }
-
-        else{
-
             //Sensor linea izquierda
-            if(ch3 <= 600 ){
-                girarIzquierda();
-            }
-            
-            else if(ch4 <= 300 ){
+        if(ch3 <= 600 ){
+            girarIzquierda();
+        } 
+        else if(ch4 <= 300 ){
 		//sensor linea derecha
-                girarDerecha();
-            }else{
-                avanzar();
-            }
-
-            if (ch3 < 600 && ch4 < 300){
-                retroceder();
-            }
-            
-            //Globo derecha
-            if(ch1 >= dInfra){
-                Parar();
-                parado = 1;
-                //Torreta
-            }
-
-
-            //globo izquierda
-            if(ch2 >= dInfra ){
-                Parar();
-                parado = 1;
-            }
+            girarDerecha();
+        }
+        else{
+            avanzar();
         }
 
+        if (ch3 < 600 && ch4 < 300){
+            retroceder();
+        }
+            
+        //Globo derecha
+        if(ch1 >= dInfra){
+            parar();
+            //Torreta
+        }
+
+        //globo izquierda
+        if(ch2 >= dInfra ){
+            parar();
+        }
     }
     return 0;
 	
