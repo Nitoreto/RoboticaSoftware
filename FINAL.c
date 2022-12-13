@@ -23,8 +23,9 @@
 #define RANGO       100
 #define Izq       0 //El 17 en el GPIO
 #define MotorPaso 4//EL 23 en el GPIO
-#define Sentido 5
+#define Sentido   5
 #define Der       3 //El 22 en el GPIO
+#define dInfra    300 
 
 
 
@@ -59,7 +60,7 @@ void parar(){
                     delay (20) ;		// mS
                 }
         }
-        
+
         ch1 = analogRead(100);
         ch2 = analogRead(101);
     }
@@ -107,7 +108,6 @@ int main(void) {
     mcp3004Setup(100, 0);
     pinMode (MotorPaso, OUTPUT) ;
     pinMode (Sentido, OUTPUT) ;
-    int dInfra = 300;
 
     softPwmCreate (Der, 0, RANGO);//Derecho
     softPwmCreate (Izq, 0, RANGO);//Izquierdo
