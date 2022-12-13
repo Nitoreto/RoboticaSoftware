@@ -25,7 +25,7 @@
 #define MotorPaso 4//EL 23 en el GPIO
 #define Sentido   5
 #define Der       3 //El 22 en el GPIO
-#define dInfra    300 
+#define dInfra    250 
 
 
 
@@ -62,7 +62,7 @@ void parar(){
 
         ch1 = analogRead(100);
         ch2 = analogRead(101);
-        
+
         }
 
     }
@@ -88,7 +88,7 @@ void girarDerecha(){
     //15 el medio
 	softPwmWrite(Izq, 20 );
     softPwmWrite(Der, 20 );
-	delay(10);
+	delay(5);
    
 }
 
