@@ -22,6 +22,7 @@
 
 #define RANGO       100
 #define Izq       0 //El 17 en el GPIO
+#define Sentido 5
 #define MotorPaso 4//EL 23 en el GPIO
 #define Der       3 //El 22 en el GPIO
 
@@ -41,14 +42,6 @@ void avanzar(){
 
     //15 para abajo avanza
     softPwmWrite(Der, 10 );
-}
-
-void retroceder(){
-    //15 el medio, 16 para arriba avanzar
-    softPwmWrite(Izq, 10 );
-    //15 para abajo avanza
-    softPwmWrite(Der, 20 );
-    delay(10);
 }
 
 void girarDerecha(){
@@ -131,7 +124,8 @@ int main(int argc, char *argv[]) {
             }
 
             if (ch3 < 600 && ch4 < 300){
-                retroceder();
+                Parar();
+                parado = 1;
             }
             
             //Globo derecha
